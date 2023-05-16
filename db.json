@@ -1,0 +1,51 @@
+{
+  "products": [
+    {
+      "name": "Мужские кроссовки Nike Blazer Mid Suede",
+      "price": 1500,
+      "img": "/images/sneakers/1.jpg"
+    },
+    {
+      "name": "Мужские кроссовки Nike Air Max 270",
+      "price": 2500,
+      "img": "/images/sneakers/2.jpg"
+    },
+    {
+      "name": "Мужские кроссовки Nike Blazer Pro",
+      "price": 2600,
+      "img": "/images/sneakers/3.jpg"
+    },
+    {
+      "name": "Кроссовки Puma X Aka Rider",
+      "price": 2980,
+      "img": "/images/sneakers/4.jpg"
+    },
+    {
+      "name": "Puma X Aka Boku Future Rider",
+      "price": 3980,
+      "img": "/images/sneakers/5.jpg"
+    },
+    {
+      "name": "Nike X Aka Boku Future Rider",
+      "price": 3180,
+      "img": "/images/sneakers/6.jpg"
+    },
+    {
+      "name": "Addidas X Aka Boku Future Rider",
+      "price": 5180,
+      "img": "/images/sneakers/7.jpg"
+    },
+    {
+      "name": "Кроссовки Future Rider",
+      "price": 5980,
+      "img": "/images/sneakers/9.jpg"
+    },
+    {
+      "name": "Кроссовки Puma X ",
+      "price": 2982,
+      "img": "/images/sneakers/10.jpg"
+    }
+  ],
+  "cart": [],
+  "favorite": []
+}
