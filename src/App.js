@@ -1,128 +1,83 @@
 import './App.css';
+import Card from "./components/Card/Card";
+import Header from "./components/Header/Header";
+import Cart from "./components/Cart/Cart";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 function App() {
+  const [cartOpened, setCartOpened] = useState(false)
+  const [items, setItems] = useState([])
+  const [cartItems, setCartItems] = useState([])
+  const [searchVal, setSearchVal] = useState('')
+  const [favorites, setFavorites] = useState([])
+
+  useEffect(() => {
+    axios('http://localhost:3001/products')
+      .then(resp => setItems(resp.data))
+    axios('http://localhost:3001/cart')
+      .then(resp => setCartItems(resp.data))
+  }, [])
+
+  const onAddToCart = (obj) => {
+    axios.post('http://localhost:3001/cart', obj)
+    setCartItems(prev => [...prev, obj])
+
+  }
+ const onAddToFavorite = (obj) => {
+   axios.post('http://localhost:3001/favorites', obj)
+   setFavorites(prev => [...prev, obj])
+ }
+
+  const onRemoveItem = (id) => {
+    axios.delete(`http://localhost:3001/cart/${id}`)
+    setCartItems(prev => prev.filter(item => item.id !== id) )
+  }
+  const onChangeSearchInput = (event) => {
+    setSearchVal(event.target.value)
+  }
+
   return (
     <div className='wrapper clear'>
-      <header className='d-flex justify-between align-center p-40'>
-        <div className='d-flex align-center'>
-          <img width={40} height={40} src="/images/logo.png" alt=""/>
-          <div>
-            <h3 className='text-uppercase'>React Sneakers</h3>
-            <p className='opacity-5'>Магазин лучших кроссовок</p>
-          </div>
-        </div>
-        <ul className='d-flex'>
-          <li className='mr-30'>
-            <img width={20} height={20} src="/images/cart.svg" alt=""/>
-            <span>5000 грн.</span></li>
-          <li>
-            <img width={20} height={20} src="/images/user.svg" alt=""/>
-          </li>
-        </ul>
-      </header>
+      {cartOpened && <Cart
+        items={cartItems}
+        onClose={() => setCartOpened(false)}
+        onRemove={onRemoveItem}
+      />}
+
+      <Header
+        onClickCart={() => setCartOpened(true)}/>
+
       <div className='content p-40'>
-        <h1 className='mb-40'>Все кроссовки</h1>
-        <div className='d-flex'>
-          <div className='card'>
-            <img width={133} height={112} src="/images/sneakers/1.jpg" alt=""/>
-            <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column '>
-                <span>Цена</span>
-                <b>6000 грн.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src="/images/plus.svg" alt=""/>
-              </button>
-            </div>
-          </div>
-
-          <div className='card'>
-            <img width={133} height={112} src="/images/sneakers/2.jpg" alt=""/>
-            <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column '>
-                <span>Цена</span>
-                <b>6500 грн.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src="/images/plus.svg" alt=""/>
-              </button>
-            </div>
-          </div>
-
-          <div className='card'>
-            <img width={133} height={112} src="/images/sneakers/3.jpg" alt=""/>
-            <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column '>
-                <span>Цена</span>
-                <b>6800 грн.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src="/images/plus.svg" alt=""/>
-              </button>
-            </div>
-          </div>
-
-          <div className='card'>
-            <img width={133} height={112} src="/images/sneakers/4.jpg" alt=""/>
-            <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column '>
-                <span>Цена</span>
-                <b>5500 грн.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src="/images/plus.svg" alt=""/>
-              </button>
-            </div>
+        <div className='d-flex align-center justify-between mb-40'>
+          <h1>{searchVal ? `Поиск по завпросу ${searchVal}` : 'Все кроссовки'}</h1>
+          <div className='search-block d-flex'>
+            <img src="/images/search.svg" alt="Search"/>
+            <input
+              type="text"
+              value={searchVal}
+              onChange={onChangeSearchInput}
+              placeholder='Search...'/>
           </div>
         </div>
-        <div className='card'>
-          <img width={133} height={112} src="/images/sneakers/5.jpg" alt=""/>
-          <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-          <div className='d-flex justify-between align-center'>
-            <div className='d-flex flex-column '>
-              <span>Цена</span>
-              <b>6900 грн.</b>
-            </div>
-            <button className='button'>
-              <img width={11} height={11} src="/images/plus.svg" alt=""/>
-            </button>
-          </div>
-        </div>
+        <div className='d-flex flex-wrap'>
+          {
+            items
+              .filter((item) => item.name.toLowerCase().includes(searchVal.toLowerCase()))
+              .map((val) => (
+                <Card
+                  key={val.img}
+                  name={val.name}
+                  price={val.price}
+                  img={val.img}
+                  onFavorite={(obj) => onAddToFavorite(obj)}
+                  onPlus={(obj) => onAddToCart(obj)}
+                />
+              ))
+          }
 
-        <div className='card'>
-          <img width={133} height={112} src="/images/sneakers/6.jpg" alt=""/>
-          <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-          <div className='d-flex justify-between align-center'>
-            <div className='d-flex flex-column '>
-              <span>Цена</span>
-              <b>3500 грн.</b>
-            </div>
-            <button className='button'>
-              <img width={11} height={11} src="/images/plus.svg" alt=""/>
-            </button>
-          </div>
-        </div>
-
-        <div className='card'>
-          <img width={133} height={112} src="/images/sneakers/7.jpg" alt=""/>
-          <h5>Мужские кроссовки Nike Blazer Mid Suede</h5>
-          <div className='d-flex justify-between align-center'>
-            <div className='d-flex flex-column '>
-              <span>Цена</span>
-              <b>6500 грн.</b>
-            </div>
-            <button className='button'>
-              <img width={11} height={11} src="/images/plus.svg" alt=""/>
-            </button>
-          </div>
         </div>
       </div>
-
-
     </div>
   );
 }
