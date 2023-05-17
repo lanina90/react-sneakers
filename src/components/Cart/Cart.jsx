@@ -1,76 +1,102 @@
 import React from 'react';
-import style from './drawer.module.scss'
+import axios from 'axios';
 
-const Cart = ({onClose, items = [], onRemove}) => {
+import Info from '../Info';
+import { useCart } from '../../hooks/useCart';
+
+import styles from './drawer.module.scss';
+import {logDOM} from "@testing-library/react";
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function Cart({ onClose, onRemove, items = [], opened }) {
+  const { cartItems, setCartItems, totalPrice } = useCart();
+  const [orderId, setOrderId] = React.useState(null);
+  const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onClickOrder = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post('http://localhost:3001/orders', {
+        items: cartItems,
+      });
+      setOrderId(data.id);
+      setIsOrderComplete(true);
+      setCartItems([]);
+
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i];
+        await axios.delete('http://localhost:3001/cart/' + item.id);
+        await delay(1000);
+      }
+    } catch (error) {
+      alert('Ошибка при создании заказа :(');
+    }
+    setIsLoading(false);
+  };
+
   return (
-    <div className={style.overlay}>
-      <div className={style.drawer}>
-        <h2 className='d-flex justify-between mb-30 '>
-          Корзина
-          <img
-            onClick={onClose}
-            className='removeBtn cu-p'
-            src="/images/btn-remove.svg" alt="Remove"/></h2>
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+      <div className={styles.drawer}>
+        <h2 className="d-flex justify-between mb-30">
+          Корзина <img onClick={onClose} className="cu-p" src="/images/btn-remove.svg" alt="Close" />
+        </h2>
 
         {items.length > 0 ? (
-          <>
-            <div className={style.items}>
-              {
-                items.map((item) => (
-                    <div className='cartItem d-flex align-center mb-20'>
-                      <div
-                        style={{backgroundImage: `url(${item.img})`}}
-                        className='cartItemImg'>
-                      </div>
-                      <div className='mr-20 flex'>
-                        <p className='mb-5'>{item.name}</p>
-                        <b>{item.price} UAH</b>
-                      </div>
-                      <img
-                        onClick={() => onRemove(item.id)}
-                        className='removeBtn'
-                        src="/images/btn-remove.svg" alt="Remove"/>
-                    </div>
-                  )
-                )
-              }
+          <div className="d-flex flex-column flex">
+            <div className="items flex">
+              {items.map((obj) => (
+                <div key={obj.id} className="cartItem d-flex align-center mb-20">
+                  <div
+                    style={{ backgroundImage: `url(${obj.img})` }}
+                    className="cartItemImg"></div>
+
+                  <div className="mr-20 flex">
+                    <p className="mb-5">{obj.title}</p>
+                    <b>{obj.price} UAH</b>
+                  </div>
+                  <img
+                    onClick={() => onRemove(obj.id)}
+                    className="removeBtn"
+                    src="/images/btn-remove.svg"
+                    alt="Remove"
+                  />
+                </div>
+              ))}
             </div>
-            <div className='cartTotalBlock'>
+            <div className="cartTotalBlock">
               <ul>
                 <li>
-                  <span>Sum</span>
+                  <span>Итого:</span>
                   <div></div>
-                  <b>12 500 грн.</b>
+                  <b>{totalPrice} UAH </b>
                 </li>
                 <li>
-                  <span>VAT 5%</span>
+                  <span>Налог 5%:</span>
                   <div></div>
-                  <b>200 грн.</b>
+                  <b>{(totalPrice / 100) * 5} UAH </b>
                 </li>
               </ul>
-              <button
-                className='greenButton'>Order <img src="/images/arrow.svg" alt="Arrow"/></button>
+              <button disabled={isLoading} onClick={onClickOrder} className="greenButton">
+                Оформить заказ <img src="/images/arrow.svg" alt="Arrow" />
+              </button>
             </div>
-          </>
-        ) : (
-          <div className='cartEmpty d-flex align-center justify-center flex-column flex'>
-            <img className='mb-20' width={120} height={120} src="/images/empty-cart.jpg" alt="Empty cart"/>
-            <h2>Корзина пуста</h2>
-            <p className='opacity-6'>Выберите как минимум один товар для оформления заказа</p>
-            <button
-              className='greenButton'
-              onClick={onClose}
-            >
-              <img src="/images/arrow.svg" alt="Arrow"/>
-              Вернуться назад
-            </button>
           </div>
-        )
-        }
-
+        ) : (
+          <Info
+            title={isOrderComplete ? 'Заказ оформлен!' : 'Корзина пустая'}
+            description={
+              isOrderComplete
+                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
+                : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'
+            }
+            image={isOrderComplete ? '/images/complete-order.jpg' : '/images/empty-cart.jpg'}
+          />
+        )}
       </div>
     </div>
   );
-};
+}
 
 export default Cart;

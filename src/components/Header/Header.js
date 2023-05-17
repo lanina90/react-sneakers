@@ -1,55 +1,47 @@
-import React, {useState} from 'react';
-import {Link, Route} from "react-router-dom";
+import React, {useContext} from 'react';
+import {Link, Outlet} from 'react-router-dom';
+import {useCart} from "../../hooks/useCart";
+import AppContext from "../../context";
 
-const Header = (props) => {
 
+
+function Header() {
+  const { totalPrice } = useCart();
+  const {onClickCart} = useContext(AppContext)
 
   return (
-    <header className='d-flex justify-between align-center p-40'>
-
-        <Link to="/">
-          <div className='d-flex align-center'>
-          <img
-            width={40}
-            height={40}
-            src="/images/logo.png"
-            alt="logo"/>
-            <div>
-              <h3 className='text-uppercase'>React Sneakers</h3>
-              <p className='opacity-5'>Магазин лучших кроссовок</p>
-            </div>
+    <>
+    <header className="d-flex justify-between align-center p-40">
+      <Link to="/">
+        <div className="d-flex align-center">
+          <img width={40} height={40} src="/images/logo.png" alt="Logotype" />
+          <div>
+            <h3 className="text-uppercase">React Sneakers</h3>
+            <p className="opacity-5">Магазин лучших кроссовок</p>
           </div>
-        </Link>
-
-      <ul className='d-flex'>
-        <li
-          className='mr-20 cu-p'
-          onClick={props.onClickCart}>
-          <img
-            width={20}
-            height={20}
-            src="/images/cart.svg"
-            alt="cart"/>
-          <span>5 000 грн.</span></li>
-        <li className='mr-20 cu-p'>
+        </div>
+      </Link>
+      <ul className="d-flex">
+        <li onClick={onClickCart} className="mr-30 cu-p">
+          <img width={18} height={18} src="/images/cart.svg" alt="Корзина" />
+          <span>{totalPrice} UAH</span>
+        </li>
+        <li className="mr-20 cu-p">
           <Link to="/favorites">
-            <img
-              width={20}
-              height={20}
-              src="/images/heart.svg"
-              alt="bookmark"/>
+            <img width={18} height={18} src="/images/heart.svg" alt="Закладки" />
           </Link>
         </li>
-        <li className='mr-20 cu-p'>
-          <img
-            width={20}
-            height={20}
-            src="/images/user.svg"
-            alt="user"/>
+        <li>
+          <Link to="/orders">
+            <img width={18} height={18} src="/images/user.svg" alt="Пользователь" />
+          </Link>
         </li>
       </ul>
+
     </header>
+  <Outlet />
+    </>
   );
-};
+}
 
 export default Header;

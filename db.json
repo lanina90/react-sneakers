@@ -1,51 +1,104 @@
 {
   "products": [
     {
-      "name": "Мужские кроссовки Nike Blazer Mid Suede",
+      "id": 1,
+      "title": "Мужские кроссовки Nike Blazer Mid Suede",
       "price": 1500,
       "img": "/images/sneakers/1.jpg"
     },
     {
-      "name": "Мужские кроссовки Nike Air Max 270",
+      "id": 2,
+      "title": "Мужские кроссовки Nike Air Max 270",
       "price": 2500,
       "img": "/images/sneakers/2.jpg"
     },
     {
-      "name": "Мужские кроссовки Nike Blazer Pro",
+      "id": 3,
+      "title": "Мужские кроссовки Nike Blazer Pro",
       "price": 2600,
       "img": "/images/sneakers/3.jpg"
     },
     {
-      "name": "Кроссовки Puma X Aka Rider",
+      "id": 4,
+      "title": "Кроссовки Puma X Aka Rider",
       "price": 2980,
       "img": "/images/sneakers/4.jpg"
     },
     {
-      "name": "Puma X Aka Boku Future Rider",
+      "id": 5,
+      "title": "Puma X Aka Boku Future Rider",
       "price": 3980,
       "img": "/images/sneakers/5.jpg"
     },
     {
-      "name": "Nike X Aka Boku Future Rider",
+      "id": 6,
+      "title": "Nike X Aka Boku Future Rider",
       "price": 3180,
       "img": "/images/sneakers/6.jpg"
     },
     {
-      "name": "Addidas X Aka Boku Future Rider",
+      "id": 7,
+      "title": "Addidas X Aka Boku Future Rider",
       "price": 5180,
       "img": "/images/sneakers/7.jpg"
     },
     {
-      "name": "Кроссовки Future Rider",
+      "id": 8,
+      "title": "Кроссовки Future Rider",
       "price": 5980,
       "img": "/images/sneakers/9.jpg"
     },
     {
-      "name": "Кроссовки Puma X ",
+      "id": 9,
+      "title": "Кроссовки Puma X ",
       "price": 2982,
       "img": "/images/sneakers/10.jpg"
     }
   ],
-  "cart": [],
-  "favorite": []
+  "cart": [
+    {
+      "id": 2,
+      "parentId": 2,
+      "title": "Мужские кроссовки Nike Air Max 270",
+      "img": "/images/sneakers/2.jpg",
+      "price": 2500
+    }
+  ],
+  "favorite": [
+    {
+      "id": 2,
+      "parentId": 2,
+      "title": "Мужские кроссовки Nike Air Max 270",
+      "img": "/images/sneakers/2.jpg",
+      "price": 2500
+    },
+    {
+      "id": 3,
+      "parentId": 3,
+      "title": "Мужские кроссовки Nike Blazer Pro",
+      "img": "/images/sneakers/3.jpg",
+      "price": 2600
+    }
+  ],
+  "orders": [
+    {
+      "items": [
+        {
+          "id": 1,
+          "parentId": 1,
+          "title": "Мужские кроссовки Nike Blazer Mid Suede",
+          "img": "/images/sneakers/1.jpg",
+          "price": 1500
+        },
+        {
+          "id": 2,
+          "parentId": 2,
+          "title": "Мужские кроссовки Nike Air Max 270",
+          "img": "/images/sneakers/2.jpg",
+          "price": 2500
+        }
+      ],
+      "id": 1
+    }
+  ]
 }
